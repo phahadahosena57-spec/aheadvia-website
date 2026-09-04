@@ -130,4 +130,33 @@ document.getElementById("photoInput").addEventListener("change",e=>{const f=e.ta
 const savedPhoto=localStorage.getItem("ach_photo");if(savedPhoto){const el=document.getElementById("photoPreview");el.innerHTML="";el.style.backgroundImage=`url(${savedPhoto})`;el.style.backgroundSize="cover";el.style.backgroundPosition="center"}
 const current=localStorage.getItem("ach_current");if(current){document.getElementById("loginBtn").textContent="My Profile";document.getElementById("signupBtn").style.display="none"}
 </script>
-</body></html>
+<script>
+/* AHEAD CREATOR HUB V4 link + member gate */
+(function(){
+ const KEY='ach_admin_v31';
+ const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}};
+ const logged=()=>!!localStorage.getItem('ach_current');
+ const normalize=u=>{u=(u||'').trim(); if(!u)return '#'; if(/^https?:\/\//i.test(u)||/^(whatsapp|tg|mailto|tel):/i.test(u))return u; return 'https://'+u};
+ const go=(url)=>{url=normalize(url); if(url==='#'){alert('এই লিংকটি Admin Panel থেকে এখনও যোগ করা হয়নি।');return} window.open(url,'_blank','noopener,noreferrer')};
+ function gate(url){ if(logged()){go(url);return} openAuth('signup'); window.__achPending=url; }
+ const oldShowProfile=window.showProfile;
+ window.showProfile=function(u){ if(oldShowProfile) oldShowProfile(u); if(window.__achPending){const x=window.__achPending;window.__achPending=null;setTimeout(()=>go(x),350)} };
+ function renderManaged(){
+   const db=load(); if(!db)return;
+   const comm=[...(db.communities||[])].filter(x=>x.active && x.link && x.link!=='#');
+   const soc=[...(db.socials||[])].filter(x=>x.active && x.url && x.url!=='#');
+   const cwrap=document.querySelector('.community-grid');
+   if(cwrap && comm.length){cwrap.innerHTML=comm.map(x=>`<article class="community"><div class="card-top"><div class="circle-icon">${x.platform==='Telegram'?'✈️':'💬'}</div><div><h3>${esc2(x.name)}</h3><span class="small-label">${esc2(x.platform)}</span></div></div><p>Join our ${esc2(x.platform)} community.</p><a class="card-btn ach-managed" href="#" data-url="${esc2(x.link)}">${esc2(x.button||'Join Now')} →</a></article>`).join('');}
+   const swrap=document.querySelector('.social-grid');
+   if(swrap && soc.length){swrap.innerHTML=soc.map(x=>`<article class="social-card"><div class="card-top"><div class="circle-icon">${icon(x.platform)}</div><div><h3>${esc2(x.platform)}</h3><span class="small-label">SOCIAL</span></div></div><p>Official ${esc2(x.platform)} link.</p><a class="card-btn ach-managed" href="#" data-url="${esc2(x.url)}">${esc2(x.button||'Open')} →</a></article>`).join('');}
+   document.querySelectorAll('.ach-managed').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();gate(a.dataset.url)}));
+ }
+ function esc2(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+ function icon(p){p=String(p||'').toLowerCase(); if(p.includes('youtube'))return '▶️'; if(p.includes('facebook'))return '📘'; if(p.includes('tiktok'))return '🎵'; if(p.includes('instagram'))return '📸'; if(p.includes('telegram'))return '✈️'; if(p.includes('whatsapp'))return '💬'; return '🌐'}
+ document.addEventListener('click',e=>{
+   const a=e.target.closest('a.card-btn'); if(!a||a.classList.contains('ach-managed'))return;
+   const href=a.getAttribute('href'); if(href && href!=='#' && !href.startsWith('#')){e.preventDefault();gate(href)}
+ });
+ window.addEventListener('load',()=>setTimeout(renderManaged,50));
+})();
+</script></body></html>

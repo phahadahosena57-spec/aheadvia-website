@@ -1,15 +1,18 @@
-AHEAD CREATOR HUB — V3 ADMIN PANEL
+AHEAD CREATOR HUB V4
 
-Open index.html for the homepage.
-Open admin.html for the Admin Panel prototype.
+New in V4:
+- Member gate: important site/card links ask users to Create Free Account first.
+- After registration, the requested link opens automatically.
+- Admin-managed WhatsApp/Telegram/Social URLs are connected to homepage buttons.
+- URL normalization adds https:// when omitted.
+- Admin Panel has Test buttons for saved external links.
+- Mobile-friendly static package.
 
-The Admin Panel can currently:
-- add/delete tutorials
-- add/delete categories
-- add/delete WhatsApp/Telegram communities
-- add/delete social links
-- show browser-local users from the earlier demo
-- export/import demo data
-- reset demo data
+IMPORTANT:
+This version still uses browser localStorage for demo/admin data. It is NOT a secure multi-user production backend. For real users and secure admin access, connect Supabase/Firebase authentication + database in the next phase.
 
-Important: this is NOT a production-secure admin system yet. Data is stored in browser localStorage. The next phase will connect secure authentication, a real cloud database, server-side admin permissions, and real-time website data.
+Upload these 4 files to the same GitHub Pages root:
+index.html
+admin.html
+logo.png
+README.txt
